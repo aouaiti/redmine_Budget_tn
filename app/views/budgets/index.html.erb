@@ -19,9 +19,9 @@
       <div class="box">
         <h3><%= l(:label_budget_summary) %></h3>
         <p>
-          <strong>Total Budget:</strong> <%= number_to_currency(@project.total_budget, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') rescue '0,00 TND' %><br>
-          <strong>Total Spent:</strong> <%= number_to_currency(@project.total_spent, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') rescue '0,00 TND' %><br>
-          <strong>Remaining:</strong> <%= number_to_currency(@project.remaining_budget, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') rescue '0,00 TND' %>
+          <strong>Total Budget:</strong> <%= RedmineBudgetTn::Currency.number_to_currency(@project.total_budget) rescue nil %><br>
+          <strong>Total Spent:</strong> <%= RedmineBudgetTn::Currency.number_to_currency(@project.total_spent) rescue nil %><br>
+          <strong>Remaining:</strong> <%= RedmineBudgetTn::Currency.number_to_currency(@project.remaining_budget) rescue nil %>
         </p>
         
         <div class="budget-chart-container">
@@ -63,7 +63,7 @@
                   <%= link_to budget.name, project_budget_path(@project, budget) %>
                 </div>
               </td>
-              <td><%= number_to_currency(budget.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+              <td><%= RedmineBudgetTn::Currency.number_to_currency(budget.amount) %></td>
               <td>
                 <% if totalBudget > 0 %>
                   <%= ((budget.amount / totalBudget) * 100).round(1) %>%
@@ -87,7 +87,7 @@
                   <%= l(:label_unallocated_budget) %>
                 </div>
               </td>
-              <td><%= number_to_currency(unallocatedBudget, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+              <td><%= RedmineBudgetTn::Currency.number_to_currency(unallocatedBudget) %></td>
               <td>
                 <% if totalBudget > 0 %>
                   <%= ((unallocatedBudget / totalBudget) * 100).round(1) %>%
@@ -100,7 +100,7 @@
           
           <tr class="total">
             <td><strong><%= l(:label_total) %></strong></td>
-            <td><strong><%= number_to_currency(totalBudget, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></strong></td>
+            <td><strong><%= RedmineBudgetTn::Currency.number_to_currency(totalBudget) %></strong></td>
             <td><strong>100%</strong></td>
           </tr>
         </tbody>
@@ -130,9 +130,9 @@
             <td><%= link_to budget.name, project_budget_path(@project, budget) %></td>
             <td><%= format_date(budget.start_date) %></td>
             <td><%= format_date(budget.end_date) if budget.end_date %></td>
-            <td><%= number_to_currency(budget.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
-            <td><%= number_to_currency(budget.spent_amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
-            <td><%= number_to_currency(budget.remaining_amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+            <td><%= RedmineBudgetTn::Currency.number_to_currency(budget.amount) %></td>
+            <td><%= RedmineBudgetTn::Currency.number_to_currency(budget.spent_amount) %></td>
+            <td><%= RedmineBudgetTn::Currency.number_to_currency(budget.remaining_amount) %></td>
             <td><%= budget.percentage_spent %>%</td>
             <td class="buttons">
               <% if User.current.allowed_to?(:manage_budgets, @project) %>

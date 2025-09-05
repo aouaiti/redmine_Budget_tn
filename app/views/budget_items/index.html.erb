@@ -24,7 +24,7 @@
             <td><%= item.name %></td>
             <td><%= item.budget_category ? item.budget_category.name : '-' %></td>
             <td><%= link_to_issue(item.issue) if item.issue %></td>
-            <td><%= number_to_currency(item.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+            <td><%= RedmineBudgetTn::Currency.number_to_currency(item.amount) %></td>
             <td><%= item.hours %></td>
             <td><%= item.item_type %></td>
             <td class="buttons">

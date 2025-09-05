@@ -26,7 +26,7 @@
       <table class="attributes">
         <tr>
           <th>Amount:</th>
-          <td><%= number_to_currency(@budget.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+          <td><%= RedmineBudgetTn::Currency.number_to_currency(@budget.amount) %></td>
         </tr>
         <tr>
           <th>Start Date:</th>
@@ -60,12 +60,12 @@
       <table class="list">
         <tr>
           <td>Spent:</td>
-          <td class="amount"><%= number_to_currency(@budget.spent_amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+          <td class="amount"><%= RedmineBudgetTn::Currency.number_to_currency(@budget.spent_amount) %></td>
         </tr>
         <tr>
           <td>Remaining:</td>
           <td class="amount <%= 'negative' if @budget.remaining_amount < 0 %>">
-            <%= number_to_currency(@budget.remaining_amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %>
+            <%= RedmineBudgetTn::Currency.number_to_currency(@budget.remaining_amount) %>
           </td>
         </tr>
         <tr>
@@ -111,7 +111,7 @@
             <td><%= item.name %></td>
             <td><%= item.budget_category ? item.budget_category.name : '-' %></td>
             <td><%= link_to_issue(item.issue) if item.issue %></td>
-            <td><%= number_to_currency(item.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+            <td><%= RedmineBudgetTn::Currency.number_to_currency(item.amount) %></td>
             <td><%= item.hours %></td>
             <td><%= item.item_type %></td>
             <td class="buttons">

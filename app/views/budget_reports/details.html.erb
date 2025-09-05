@@ -11,9 +11,9 @@
 <div class="box">
   <p>
     <strong>Budget:</strong> <%= @budget.name %><br>
-    <strong>Total Amount:</strong> <%= number_to_currency(@budget.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %><br>
-    <strong>Spent:</strong> <%= number_to_currency(@budget.spent_amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %><br>
-    <strong>Remaining:</strong> <%= number_to_currency(@budget.remaining_amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %><br>
+    <strong>Total Amount:</strong> <%= RedmineBudgetTn::Currency.number_to_currency(@budget.amount) %><br>
+    <strong>Spent:</strong> <%= RedmineBudgetTn::Currency.number_to_currency(@budget.spent_amount) %><br>
+    <strong>Remaining:</strong> <%= RedmineBudgetTn::Currency.number_to_currency(@budget.remaining_amount) %><br>
     <strong>Start Date:</strong> <%= format_date(@budget.start_date) %><br>
     <strong>End Date:</strong> <%= format_date(@budget.end_date) if @budget.end_date %>
   </p>
@@ -53,7 +53,7 @@
                 <td><%= item.name %></td>
                 <td><%= item.budget_category ? item.budget_category.name : '-' %></td>
                 <td><%= link_to_issue(item.issue) if item.issue %></td>
-                <td><%= number_to_currency(item.amount, unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></td>
+                <td><%= RedmineBudgetTn::Currency.number_to_currency(item.amount) %></td>
                 <td><%= item.hours %></td>
                 <td><%= item.item_type %></td>
                 <td><%= total > 0 ? ((item.amount / total) * 100).round(2) : 0 %>%</td>
@@ -61,7 +61,7 @@
             <% end %>
             <tr class="total">
               <td colspan="3"><strong>Total</strong></td>
-              <td><strong><%= number_to_currency(@budget_items.sum(&:amount), unit: 'TND', format: '%n %u', delimiter: ' ', separator: ',') %></strong></td>
+              <td><strong><%= RedmineBudgetTn::Currency.number_to_currency(@budget_items.sum(&:amount)) %></strong></td>
               <td><strong><%= @budget_items.sum(&:hours) %></strong></td>
               <td></td>
               <td></td>

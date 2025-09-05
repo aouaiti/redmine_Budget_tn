@@ -14,7 +14,7 @@
   <p>
     <label for="budget_amount">Amount<span class="required">*</span>:</label>
     <%= text_field_tag 'budget[amount]', budget.amount, required: true, size: 10 %>
-    <span class="currency">TND</span>
+    <span class="currency"><%= (Setting.plugin_redmine_budget_tn || {})['default_currency'] || 'TND' %></span>
   </p>
   
   <p>

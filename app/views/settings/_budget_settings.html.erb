@@ -1,8 +1,7 @@
 <p>
   <label>Default Currency:</label>
-  <%= select_tag 'settings[default_currency]', 
-      options_for_select([['TND', 'TND'], ['EUR', 'EUR'], ['USD', 'USD']], @settings['default_currency']), 
-      class: 'select' %>
+  <%= text_field_tag 'settings[default_currency]', @settings['default_currency'] || 'TND', size: 10, class: 'input' %>
+  <em class="info">ISO 4217 code (e.g., TND, EUR, USD) or custom.</em>
 </p>
 
 <p>
@@ -27,6 +26,6 @@
 </p>
 
 <p>
-  <label>Default Hourly Rate (TND):</label>
+  <label>Default Hourly Rate (<%= (@settings['default_currency'] || 'TND') %>):</label>
   <%= text_field_tag 'settings[hourly_rate]', @settings['hourly_rate'], size: 5 %>
-</p> 
+</p>

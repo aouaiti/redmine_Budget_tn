@@ -85,6 +85,42 @@ module RedmineBudgetTn
       Rails.logger.info "RedmineBudgetTn: Direct project patching completed successfully"
     end
   end
+  
+  # Helper to read currency settings and format amounts consistently
+  module Currency
+    module_function
+    
+    def settings
+      Setting.plugin_redmine_budget_tn || {}
+    end
+    
+    def unit
+      (settings['default_currency'] || 'TND').to_s
+    end
+    
+    def format_pattern
+      (settings['currency_format'] || '%n %u').to_s
+    end
+    
+    def separator
+      (settings['currency_separator'] || ',').to_s
+    end
+    
+    def delimiter
+      (settings['currency_delimiter'] || ' ').to_s
+    end
+    
+    # Format a numeric amount per settings
+    def number_to_currency(amount)
+      ActionController::Base.helpers.number_to_currency(
+        amount.to_f,
+        unit: unit,
+        format: format_pattern,
+        delimiter: delimiter,
+        separator: separator
+      )
+    end
+  end
 end
 
 # Apply patches immediately
