@@ -31,7 +31,7 @@
       
       <div class="box" style="margin-top: 20px;">
         <h3><%= l(:label_budget_distribution) %></h3>
-        <div class="budget-chart-container">
+        <div class="budget-chart-container tall">
           <canvas id="projectBudgetChart" width="300" height="200"></canvas>
         </div>
       </div>
@@ -161,6 +161,11 @@
 
 <%= javascript_tag do %>
   document.addEventListener('DOMContentLoaded', function() {
+    // Helper to truncate long labels for legends while keeping tooltips full
+    function truncateText(text, maxLength) {
+      if (typeof text !== 'string') { return text; }
+      return text.length > maxLength ? (text.substring(0, maxLength - 1) + '…') : text;
+    }
     // Define colors here for both charts
     var chartColors = [
       '#5cb85c', // Green
@@ -198,10 +203,11 @@
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          position: 'right',
+          position: 'bottom',
           labels: {
-            boxWidth: 20,
-            fontSize: 12
+            boxWidth: 12,
+            fontSize: 10,
+            padding: 8
           }
         },
         tooltips: {
@@ -223,12 +229,14 @@
     var ctxBudget = document.getElementById('projectBudgetChart').getContext('2d');
     
     // Prepare data for chart.js - each budget gets its own slice
-    var labels = [];
+    var labelsFull = [];
+    var labelsTrunc = [];
     var values = [];
     var backgroundColors = [];
     
     <% @budgets.each_with_index do |budget, index| %>
-      labels.push("<%= j(budget.name) %>");
+      labelsFull.push("<%= j(budget.name) %>");
+      labelsTrunc.push(truncateText("<%= j(budget.name) %>", 24));
       values.push(<%= budget.amount %>);
       backgroundColors.push(chartColors[<%= index %> % chartColors.length]);
     <% end %>
@@ -241,7 +249,8 @@
     
     var unallocatedBudget = Math.max(0, totalBudget - allocatedBudget);
     if (unallocatedBudget > 0) {
-      labels.push("<%= j(l(:label_unallocated_budget)) %>");
+      labelsFull.push("<%= j(l(:label_unallocated_budget)) %>");
+      labelsTrunc.push("<%= j(l(:label_unallocated_budget)) %>");
       values.push(unallocatedBudget);
       backgroundColors.push("#777777"); // Gray color for unallocated budget
     }
@@ -249,7 +258,7 @@
     new Chart(ctxBudget, {
       type: 'pie',
       data: {
-        labels: labels,
+        labels: labelsTrunc,
         datasets: [{
           data: values,
           backgroundColor: backgroundColors,
@@ -260,10 +269,11 @@
         responsive: true,
         maintainAspectRatio: false,
         legend: {
-          position: 'right',
+          position: 'bottom',
           labels: {
-            boxWidth: 20,
-            fontSize: 12
+            boxWidth: 12,
+            fontSize: 10,
+            padding: 8
           }
         },
         tooltips: {
@@ -274,7 +284,8 @@
               const currentValue = dataset.data[tooltipItem.index];
               const percentage = Math.round(currentValue / total * 100);
               
-              return data.labels[tooltipItem.index] + ': ' + currentValue + ' TND (' + percentage + '%)';
+              var fullLabel = (typeof labelsFull !== 'undefined' && labelsFull[tooltipItem.index]) ? labelsFull[tooltipItem.index] : data.labels[tooltipItem.index];
+              return fullLabel + ': ' + currentValue + ' TND (' + percentage + '%)';
             }
           }
         }
